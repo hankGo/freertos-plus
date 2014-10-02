@@ -145,13 +145,19 @@ void test_command(int n, char *argv[]) {
     int error;
 
     fio_printf(1, "\r\n");
-
-    handle = host_action(SYS_OPEN, "output/syslog", 8);
+	
+    // establish the targetFile first 
+    //handle = host_action(SYS_SYSTEM, "mkdir -p output");
+    //handle = host_action(SYS_SYSTEM, "touch output/syslog");
+    
+    // open the file
+    handle = host_action(SYS_OPEN, "syslog", 8);
     if(handle == -1) {
-        fio_printf(1, "Open file error!\n\r");
+        fio_printf(0, "Open file error!\n\r");
         return;
     }
 
+    // write something to the file
     char *buffer = "Test host_write function which can write data to output/syslog\n";
     error = host_action(SYS_WRITE, handle, (void *)buffer, strlen(buffer));
     if(error != 0) {
@@ -160,6 +166,7 @@ void test_command(int n, char *argv[]) {
         return;
     }
 
+    // close the file	
     host_action(SYS_CLOSE, handle);
 }
 
